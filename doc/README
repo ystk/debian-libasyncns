@@ -1,0 +1,158 @@
+
+                                libasyncns 0.3
+
+   Copyright 2005-2007 Lennart Poettering <mznflapaf (at) 0pointer (dot)
+   de>
+     * [1]License
+     * [2]News
+     * [3]Overview
+     * [4]Current Status
+     * [5]Documentation
+     * [6]Requirements
+     * [7]Installation
+     * [8]Acknowledgements
+     * [9]Download
+
+License
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU Lesser General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with this program; if not, write to the Free Software
+   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+News
+
+   Wed 23 May 2007:
+
+   [10]Version 0.3 released; changes include: build fixes: properly
+   detect res_query() on Linux/AMD64, support older autoconf versions
+
+   Fri 16 Feb 2007:
+
+   [11]Version 0.2 released; changes include: res_query() support; minor
+   bug fixes; doc updates
+
+   Sat 8 Jan 2005:
+
+   [12]Version 0.1 released
+
+Overview
+
+   libasyncns is a C library for Linux/Unix for executing name service
+   queries asynchronously. It is an asynchronous wrapper around
+   getaddrinfo(3), getnameinfo(3), res_query(3) and res_search(3) from
+   libc and libresolv.
+
+   In contrast to GNU's asynchronous name resolving API getaddrinfo_a(),
+   libasyncns does not make use of UNIX signals for reporting completion
+   of name queries. Instead, the API exports a standard UNIX file
+   descriptor which may be integerated cleanly into custom main loops.
+
+   In contrast to asynchronous DNS resolving libraries like
+   [13]libdenise, [14]skadns, [15]adns, libasyncns is just an
+   asynchronous wrapper around the libc's synchronous getaddrinfo() API,
+   which has the advantage of allowing name resolution using techniques
+   like [16]Multicast DNS, LDAP or NIS using standard libc NSS (Name
+   Service Switch) modules. libasyncns is compatible with IPv6 if the
+   underlying libc is.
+
+   libasyncns is very tiny, consisting of just one header and one source
+   file. It has no dependencies besides libc.
+
+   By default libasyncns spawns a number of worker threads (LWPs) to
+   process name queries. Alternatively or when POSIX Threads are not
+   supported, libasyncns can fork() off worker processes instead.
+
+Current Status
+
+   Version 0.3 is quite stable and feature complete.
+
+Documentation
+
+   You may browse the [17]Doxygen generated [18]programing documentation
+   the API. (Run make doxygen to generate this documentation from the
+   source tree)
+
+Requirements
+
+   Currently, libasyncns is tested on Linux and Solaris
+   (sparc-sun-solaris2.8) only.
+
+   libasyncns was developed and tested on Debian GNU/Linux "testing" from
+   January 2005, it should work on most other Linux distributions (and
+   maybe Unix versions) since it uses GNU autoconf and GNU libtool for
+   source code configuration and shared library management.
+
+   libasyncns has no dependencies besides a libc that supports
+   getaddrinfo() and res_query().
+
+Installation
+
+   As this package is made with the GNU autotools you should run
+   ./configure inside the distribution directory for configuring the
+   source tree. After that you should run make for compilation and make
+   install (as root) for installation of libasyncns.
+
+Acknowledgements
+
+   Sjoerd Simons for the res_query() support.
+
+Download
+
+   The newest release is always available from
+   [19]http://0pointer.de/lennart/projects/libasyncns/
+
+   The current release is [20]0.3
+
+   Get libasyncns's development sources from the [21]Subversion
+   [22]repository ([23]viewcvs):
+svn checkout svn://svn.0pointer.de/libasyncns/trunk libasyncns
+
+   You may find an up to date Debian package of libasyncns on the
+   [24]Debian package repository.
+
+   If you want to be notified whenever I release a new version of this
+   software use the subscription feature of [25]Freshmeat.
+     _________________________________________________________________
+
+
+    Lennart Poettering <mznflapaf (at) 0pointer (dot) de>, May 2007
+
+   $Id: README.html.in 37 2007-05-22 23:43:46Z lennart $
+
+References
+
+   1. README#license
+   2. README#news
+   3. README#overview
+   4. README#status
+   5. README#documentation
+   6. README#requirements
+   7. README#installation
+   8. README#acks
+   9. README#download
+  10. http://0pointer.de/lennart/projects/libasyncns/libasyncns-0.3.tar.gz
+  11. http://0pointer.de/lennart/projects/libasyncns/libasyncns-0.2.tar.gz
+  12. http://0pointer.de/lennart/projects/libasyncns/libasyncns-0.1.tar.gz
+  13. http://libdenise.sourceforge.net/
+  14. http://www.skarnet.org/software/skadns/
+  15. http://www.chiark.greenend.org.uk/~ian/adns/
+  16. http://0pointer.de/lennart/projects/nss-mdns/
+  17. http://www.doxygen.org/
+  18. http://0pointer.de/lennart/projects/libasyncns/doxygen/
+  19. http://0pointer.de/lennart/projects/libasyncns/
+  20. http://0pointer.de/lennart/projects/libasyncns/libasyncns-0.3.tar.gz
+  21. http://subversion.tigris.org/
+  22. svn://svn.0pointer.de/libasyncns
+  23. http://0pointer.de/cgi-bin/viewcvs.cgi/?root=libasyncns
+  24. http://packages.debian.org/libasyncns0
+  25. http://freshmeat.net/projects/libasyncns/
