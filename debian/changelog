@@ -1,0 +1,45 @@
+libasyncns (0.3-1.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * libasyncns/asyncns.c: Fix data alignment issue on armel, backported from
+    upstream. (Closes: #566139)
+
+ -- Tanguy Ortolo <tanguy+debian@ortolo.eu>  Thu, 25 Nov 2010 20:55:54 +0100
+
+libasyncns (0.3-1) unstable; urgency=low
+
+  * New upstream release.
+  * debian/rules: Port to CDBS.
+  * debian/patches/01_resolv-configure-check.dpatch:
+    -Removed. Merged upstream.
+
+ -- CJ van den Berg <cj@vdbonline.com>  Wed, 23 May 2007 02:01:55 +0200
+
+libasyncns (0.2-2) unstable; urgency=low
+
+  * debian/patches/01_resolv-configure-check.dpatch:
+    + Added. Fixes res_query configure check to work properly on amd64.
+      Submitted by Sjoerd Simons. (Closes: #411582)
+  * debian/rules: Added version info to shlibs because 0.2 added new symbols.
+  * debian/libasyncns0.docs: Ship upstream README file.
+
+ -- CJ van den Berg <cj@vdbonline.com>  Tue, 20 Feb 2007 02:28:55 +0100
+
+libasyncns (0.2-1) unstable; urgency=low
+
+  * New upstream version. Adds res_query() support.
+
+ -- CJ van den Berg <cj@vdbonline.com>  Sun, 18 Feb 2007 23:39:34 +0100
+
+libasyncns (0.1-2) unstable; urgency=low
+
+  * Misc cleanups.
+
+ -- CJ van den Berg <cj@vdbonline.com>  Thu, 21 Sep 2006 02:22:37 +0200
+
+libasyncns (0.1-1) unstable; urgency=low
+
+  * Initial release
+
+ -- CJ van den Berg <cj@vdbonline.com>  Wed, 20 Sep 2006 14:04:14 +0200
+
