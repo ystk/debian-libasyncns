@@ -1,24 +1,31 @@
 Source: libasyncns
 Priority: optional
-Maintainer: CJ van den Berg <cj@vdbonline.com>
-Build-Depends: debhelper (>= 5), cdbs, autotools-dev
-Standards-Version: 3.7.2
+Maintainer: Tanguy Ortolo <tanguy+debian@ortolo.eu>
+DM-Upload-Allowed: yes
+Build-Depends: debhelper (>= 8.3.1), autotools-dev, doxygen
+Standards-Version: 3.9.2
+Homepage: http://0pointer.de/lennart/projects/libasyncns/
+Vcs-Git: git://git.ortolo.eu/pkg-libasyncns.git
+Vcs-Browser: http://git.ortolo.eu/pkg-libasyncns.git
 Section: libs
 
 Package: libasyncns-dev
 Section: libdevel
 Architecture: any
-Depends: libasyncns0 (= ${Source-Version}), ${misc:Depends}
-Description: Asyncronous name service query library development files
- libasyncns is a C library for querying name services asynchronously. It is
- a wrapper around the libc functions getaddrinfo(3) and getnameinfo(3).
+Depends: libasyncns0 (= ${binary:Version}), ${misc:Depends}
+Description: Asynchronous name service query library development files
+ libasyncns is a C library for Linux/Unix for executing name service queries
+ asynchronously. It is an asynchronous wrapper around getaddrinfo(3),
+ getnameinfo(3), res_query(3) and res_search(3) from libc and libresolv.
  .
  This package contains development headers and libraries.
 
 Package: libasyncns0
-Section: libs
 Architecture: any
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Asyncronous name service query library
- libasyncns is a C library for querying name services asynchronously. It is
- a wrapper around the libc functions getaddrinfo(3) and getnameinfo(3).
+Description: Asynchronous name service query library
+ libasyncns is a C library for Linux/Unix for executing name service queries
+ asynchronously. It is an asynchronous wrapper around getaddrinfo(3),
+ getnameinfo(3), res_query(3) and res_search(3) from libc and libresolv.

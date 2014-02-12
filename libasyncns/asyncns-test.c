@@ -1,22 +1,21 @@
-/* $Id: asyncns-test.c 27 2007-02-16 13:51:03Z lennart $ */
-
 /***
   This file is part of libasyncns.
- 
+
+  Copyright 2005-2008 Lennart Poettering
+
   libasyncns is free software; you can redistribute it and/or modify
   it under the terms of the GNU Lesser General Public License as
-  published by the Free Software Foundation; either version 2 of the
+  published by the Free Software Foundation, either version 2.1 of the
   License, or (at your option) any later version.
- 
+
   libasyncns is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-  General Public License for more details.
- 
+  Lesser General Public License for more details.
+
   You should have received a copy of the GNU Lesser General Public
-  License along with libasyncns; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
-  USA.
+  License along with libasyncns. If not, see
+  <http://www.gnu.org/licenses/>.
 ***/
 
 #if HAVE_CONFIG_H
@@ -32,6 +31,12 @@
 #include <arpa/nameser.h>
 #include <resolv.h>
 #include <assert.h>
+#include <signal.h>
+#include <errno.h>
+
+#if HAVE_ARPA_NAMESER_COMPAT_H
+#include <arpa/nameser_compat.h>
+#endif
 
 #include "asyncns.h"
 
@@ -44,7 +49,9 @@ int main(int argc, char *argv[]) {
     char host[NI_MAXHOST] = "", serv[NI_MAXSERV] = "";
     unsigned char *srv;
 
-    if (!(asyncns = asyncns_new(10))) {
+    signal(SIGCHLD, SIG_IGN);
+
+    if (!(asyncns = asyncns_new(2))) {
         fprintf(stderr, "asyncns_new() failed\n");
         goto fail;
     }
@@ -56,23 +63,34 @@ int main(int argc, char *argv[]) {
 
     q1 = asyncns_getaddrinfo(asyncns, argc >= 2 ? argv[1] : "www.heise.de", NULL, &hints);
 
+    if (!q1)
+        fprintf(stderr, "asyncns_getaddrinfo(): %s\n", strerror(errno));
+
     /* Make an address -> name query */
     memset(&sa, 0, sizeof(sa));
     sa.sin_family = AF_INET;
     sa.sin_addr.s_addr = inet_addr(argc >= 3 ? argv[2] : "193.99.144.71");
     sa.sin_port = htons(80);
-    
-    q2 = asyncns_getnameinfo(asyncns, (struct sockaddr*) &sa, sizeof(sa), 0, 1, 1); 
+
+    q2 = asyncns_getnameinfo(asyncns, (struct sockaddr*) &sa, sizeof(sa), 0, 1, 1);
+
+    if (!q2)
+        fprintf(stderr, "asyncns_getnameinfo(): %s\n", strerror(errno));
 
     /* Make a res_query() call */
-    q3 = asyncns_res_query(asyncns, "_xmpp-client._tcp.gmail.com", C_IN, T_SRV); 
+    q3 = asyncns_res_query(asyncns, "_xmpp-client._tcp.gmail.com", C_IN, T_SRV);
+
+    if (!q3)
+        fprintf(stderr, "asyncns_res_query(): %s\n", strerror(errno));
 
     /* Wait until the three queries are completed */
-    while (!asyncns_isdone(asyncns, q1) 
+    while (!asyncns_isdone(asyncns, q1)
            || !asyncns_isdone(asyncns, q2)
            || !asyncns_isdone(asyncns, q3)) {
-        if (asyncns_wait(asyncns, 1) < 0)
+        if (asyncns_wait(asyncns, 1) < 0) {
+            fprintf(stderr, "asyncns_wait(): %s\n", strerror(errno));
             goto fail;
+        }
     }
 
     /* Interpret the result of the name -> addr query */
@@ -85,11 +103,11 @@ int main(int argc, char *argv[]) {
             char t[256];
             const char *p = NULL;
 
-            if (i->ai_family == PF_INET) 
+            if (i->ai_family == PF_INET)
                 p = inet_ntop(AF_INET, &((struct sockaddr_in*) i->ai_addr)->sin_addr, t, sizeof(t));
             else if (i->ai_family == PF_INET6)
                 p = inet_ntop(AF_INET6, &((struct sockaddr_in6*) i->ai_addr)->sin6_addr, t, sizeof(t));
-                          
+
             printf("%s\n", p);
         }
 
@@ -104,8 +122,8 @@ int main(int argc, char *argv[]) {
 
     /* Interpret the result of the SRV lookup */
     if ((ret = asyncns_res_done(asyncns, q3, &srv)) < 0) {
-        fprintf(stderr, "error: %s %i\n", strerror(ret), ret);
-    } else if (ret == 0) { 
+        fprintf(stderr, "error: %s %i\n", strerror(errno), ret);
+    } else if (ret == 0) {
         fprintf(stderr, "No reply for SRV lookup\n");
     } else {
         int qdcount;
@@ -135,24 +153,26 @@ int main(int argc, char *argv[]) {
             pos += len;
             /* Ignore type, ttl, class and dlen */
             pos += 10;
-        
+
             GETSHORT(pref, pos);
             GETSHORT(weight, pos);
             GETSHORT(port, pos);
-            len = dn_expand(srv, end, pos, name, 255); 
+            len = dn_expand(srv, end, pos, name, 255);
             printf("\tpreference: %2d weight: %2d port: %d host: %s\n",
                    pref, weight, port, name);
 
             pos += len;
         }
+
+        asyncns_freeanswer(srv);
     }
-    
+
     r = 0;
 
 fail:
 
     if (asyncns)
         asyncns_free(asyncns);
-    
+
     return r;
 }

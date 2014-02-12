@@ -1,6 +1,20 @@
 #!/usr/bin/make -f
+# -*- makefile -*-
 
-include /usr/share/cdbs/1/rules/debhelper.mk
-include /usr/share/cdbs/1/class/autotools.mk
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
 
-DEB_DH_INSTALL_ARGS = --sourcedir=$(CURDIR)/debian/tmp
+export LDFLAGS=-Wl,--as-needed
+
+%:
+	dh  $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- --docdir=/usr/share/doc/libasyncns-dev
+
+override_dh_auto_build:
+	dh_auto_build
+	make -C doxygen doxygen
+
+override_dh_installchangelogs:
+	dh_installchangelogs debian/changelog.upstream
