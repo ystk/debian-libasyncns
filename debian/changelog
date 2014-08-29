@@ -1,3 +1,21 @@
+libasyncns (0.8-5) unstable; urgency=medium
+
+  * debian/rules:
+     + use dh-autoreconf to bring autotools files up to date for arm64
+       (Closes: #725778).
+     + avoid overwriting hardening flags by setting DEB_LDFLAGS_MAINT_APPEND
+       rather than directly LDFLAGS.
+  * debian/control:
+     + depend on dh-autoreconf.
+     + remove obsolete (and not needed anymore) field DM-Upload-Allowed.
+     + update Standards-Version to 3.9.5 (one change needed: remove the
+       DM-Upload-Allowed control field).
+     + depend on debhelper (>= 9~).
+  * debian/copyright: update Format field now the machine-readable format has
+    been officially published.
+
+ -- Tanguy Ortolo <tanguy+debian@ortolo.eu>  Thu, 30 Jan 2014 12:00:53 +0100
+
 libasyncns (0.8-4) unstable; urgency=low
 
   * debian/control:

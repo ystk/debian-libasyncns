@@ -1,9 +1,8 @@
 Source: libasyncns
 Priority: optional
 Maintainer: Tanguy Ortolo <tanguy+debian@ortolo.eu>
-DM-Upload-Allowed: yes
-Build-Depends: debhelper (>= 8.3.1), autotools-dev, doxygen
-Standards-Version: 3.9.2
+Build-Depends: debhelper (>= 9~), dh-autoreconf, doxygen
+Standards-Version: 3.9.5
 Homepage: http://0pointer.de/lennart/projects/libasyncns/
 Vcs-Git: git://git.ortolo.eu/pkg-libasyncns.git
 Vcs-Browser: http://git.ortolo.eu/pkg-libasyncns.git

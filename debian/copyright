@@ -1,4 +1,4 @@
-Format: http://svn.debian.org/wsvn/dep/web/deps/dep5.mdwn?rev=166
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: libasyncns
 Upstream-Contact: Lennart Poettering <mznflapaf@0pointer.de>
 Source: http://0pointer.de/lennart/projects/libasyncns/
